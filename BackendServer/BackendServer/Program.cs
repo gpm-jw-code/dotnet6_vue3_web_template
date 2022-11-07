@@ -18,6 +18,7 @@ if (app.Environment.IsDevelopment())
 
 
 app.UseStaticFiles();
+app.UseDefaultFiles();
 
 app.UseCors(c => c.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 

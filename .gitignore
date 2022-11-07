@@ -24,3 +24,4 @@ pnpm-debug.log*
 /BackendServer/.vs
 /BackendServer/BackendServer/obj
 /BackendServer/BackendServer/bin
+/BackendServer/BackendServer/wwwroot
