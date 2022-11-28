@@ -25,3 +25,5 @@ pnpm-debug.log*
 /BackendServer/BackendServer/obj
 /BackendServer/BackendServer/bin
 /BackendServer/BackendServer/wwwroot
+/BackendServer/RosBridgeClient/obj
+/BackendServer/RosBridgeClient/bin

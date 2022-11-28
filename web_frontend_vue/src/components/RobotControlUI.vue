@@ -1,7 +1,7 @@
 <template>
   <div class="robot-control">
     <div class="settings">
-      <div class="topics">
+      <div class="topics border-bottom mb-2 pb-2">
         <span>Topic</span>
         <div>
           <div class="topic">
@@ -20,7 +20,7 @@
           </div>
         </div>
       </div>
-      <div>
+      <div class="mb-2">
         <span>速度</span>
         <el-input-number size="small" v-model="speed"></el-input-number>
       </div>
@@ -62,51 +62,72 @@
       </div>
     </div>
     <el-divider></el-divider>
-    <div class="server-reply">{{server_reply_dat}}</div>
+    <div class="server-reply">
+      <div class="text-start">
+        <h4>Server Reply</h4>
+      </div>
+      <div class="message bg-dark">{{server_reply_dat}}</div>
+    </div>
   </div>
 </template>
 
 <script>
-import { Move, Fork, SetForkControlTopic, SetMoveTopic, GetForkControlTopic, GetMoveTopic } from "@/WebAPI/RobotAPI"
+import {
+  Move,
+  Fork,
+  SetForkControlTopic,
+  SetMoveTopic,
+  GetForkControlTopic,
+  GetMoveTopic,
+} from "@/WebAPI/RobotAPI";
+
 export default {
   data() {
     return {
-      server_reply_dat: '',
+      server_reply_dat: "",
       topics: {
         move: "",
-        fork: ""
+        fork: "",
       },
       speed: 1,
       angle: 30,
-
-    }
+    };
   },
   methods: {
     async MoveInvoke(direction, value) {
-      this.server_reply_dat = 'MOVE:' + await Move(direction, value);
+      this.server_reply_dat = "MOVE:" + (await Move(direction, value));
     },
     async ForkInvoke(action) {
-      this.server_reply_dat = 'FORK:' + await Fork(action);
-
+      this.server_reply_dat = "FORK:" + (await Fork(action));
     },
     async SetMoveTopic() {
-      await SetMoveTopic(this.topics.move);
+      await SetMoveTopic(this.topics.move).catch(er => {
+        $Toast.Warning('設定 Move Topic失敗', 5)
+      });
     },
     async SetForkTopic() {
-      await SetForkControlTopic(this.topics.fork);
-    }
+      await SetForkControlTopic(this.topics.fork).catch(er => {
+        $Toast.Warning('設定 Fork Control Topic失敗', 5)
+      });
+    },
   },
   mounted() {
-    GetMoveTopic().then(topic => this.topics.move = topic);
-    GetForkControlTopic().then(topic => this.topics.fork = topic);
-  }
-}
+    GetMoveTopic().then((topic) => {
+      this.topics.move = topic;
+      GetForkControlTopic().then((topic) => (this.topics.fork = topic));
+    }
+    ).catch(er => $Toast.Warning('嘗試下載Topic失敗', 5));
+
+  },
+};
 </script>
 
 <style lang="scss" scoped>
 .robot-control {
   border: 1px solid black;
+  border-radius: 5px;
   margin: 10px;
+  height: 700px;
   span {
     margin: auto 10px;
   }
@@ -128,6 +149,8 @@ export default {
     flex-flow: row;
     justify-content: center;
     background-color: rgb(131, 158, 175);
+    margin: 10px;
+    color: white;
     button {
       padding: 10px;
       width: 60px;
@@ -148,6 +171,9 @@ export default {
     color: white;
     height: 40px;
     margin: 10px;
+    .message {
+      height: 40px;
+    }
   }
 }
 </style>

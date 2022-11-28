@@ -3,6 +3,27 @@ var apiinstance = axios.create({
   baseURL: 'http://localhost:5185/api/ForkRobot',
 })
 
+apiinstance.interceptors.request.use(
+  (config) => {
+    return config
+  },
+  (err) => {
+    $Toast.Error(err.toString())
+    return Promise.reject(err)
+  },
+)
+
+apiinstance.interceptors.response.use(
+  (res) => {
+    return res
+  },
+  (err) => {
+    $Toast.Error(err.toString(), 3, 'top-right')
+    // alert('request error', err.toString())
+    return Promise.reject(err)
+  },
+)
+
 export async function SetRobotMoveTopic(topic) {}
 
 export async function Move(direction, value) {
